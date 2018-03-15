@@ -3,7 +3,12 @@
        <div v-if="!amountT">
           <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
               <FormItem label="上传" >
-                <Upload action="//jsonplaceholder.typicode.com/posts/">
+                <Upload action="//jsonplaceholder.typicode.com/posts/"
+                  ref="upload"
+                  :on-success="handleSuccess"
+                  :format="['doc','xls','docx']"
+                  :on-format-error="handleFormatError"
+                >
                     <Button type="ghost" icon="ios-cloud-upload-outline">Upload files</Button>
                 </Upload>
               </FormItem>
@@ -98,6 +103,17 @@ export default {
     };
   },
   methods: {
+    handleSuccess (res, file) {
+        console.log(res,file);
+        // file.url = 'https://o5wwk8baw.qnssl.com/7eb99afb9d5f317c912f08b5212fd69a/avatar';
+        // file.name = '7eb99afb9d5f317c912f08b5212fd69a';
+    },
+    handleFormatError (file) {
+        this.$Notice.warning({
+            title: '格式错误',
+            desc: '该文件 ' + file.name + ' 不是可支持文档格式.'
+        });
+    },
     next() {
       this.amountT = !this.amountT;
     },
@@ -106,6 +122,7 @@ export default {
       console.log(this.dat.content);
     },
     handleSubmit(name) {
+      let content = this.$refs.ue.getUEContent();
       this.$refs[name].validate(valid => {
         if (valid) {
           this.$Message.success("Success!");

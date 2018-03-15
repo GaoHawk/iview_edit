@@ -29,8 +29,28 @@ function ajaxData(url, cookies, store) {
 const store = new Vuex.Store({
     state: {
         menuList: [],
+        searchChanel: [
+            { chanel1: '上海' },
+            { chanel2: '不限' },
+            { chanel3: '北京' },
+            { chanel4: '北京' },
+            { chanel5: '上海' },
+            { chanel6: '杭州' },
+            { chanel7: '不限' },
+            { chanel8: '上海' },
+            { chanel9: '上海' },
+            { chanel10: '上海' },
+            { chanel11: '上海' }
+        ]
     },
     mutations: {
+        updateChanel(state, params) {
+            console.log(params);
+            state.searchChanel[params.group] = {
+                    ['chanel' + (params.group + 1)]: params.val
+                }
+                // state.searchChanel.chanel = val;
+        },
         updateMenuList(state, data) {
             // let accessCode = parseInt(Cookies.get('access'));
             let menuList = [];

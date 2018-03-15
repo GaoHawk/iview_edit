@@ -18,52 +18,53 @@
   position: relative;
   top: 15px;
   left: 20px;
+  margin-right: 10%;
 }
 .layout-nav {
   width: 420px;
   margin: 0 auto;
   margin-right: 20px;
 }
+
 </style>
 
 <template>
 <div id="app" style="height:100%;">
-            <Header>
-              <Menu mode="horizontal" theme="dark" active-name="1">
-                  <div class="layout-logo"></div>
-                  <div class="layout-nav">
-                      <MenuItem name="1">
-                          <Icon type="ios-navigate"></Icon>
-                          Item 1
-                      </MenuItem>
-                      <MenuItem name="2">
-                          <Icon type="ios-keypad"></Icon>
-                          Item 2
-                      </MenuItem>
-                      <MenuItem name="3">
-                          <Icon type="ios-analytics"></Icon>
-                          Item 3
-                      </MenuItem>
-                      <MenuItem name="4">
-                          <Icon type="ios-paper"></Icon>
-                          Item 4
-                      </MenuItem>
-                  </div>
-              </Menu>
-          </Header>
+        <div class="header">
+          <Menu mode="horizontal" theme="dark" active-name="1">
+              <div class="layout-logo"></div>
+              <MenuItem name="1">
+                  <Icon type="ios-home-outline"></Icon>
+                  首页
+              </MenuItem>
+              <MenuItem name="2">
+                  <Icon type="ios-folder-outline"></Icon>
+                  资源
+              </MenuItem>
+              <MenuItem name="3">
+                  <Icon type="paper-airplane"></Icon>
+                  广告
+              </MenuItem>
+          </Menu>
+     </div>
       <Row type="flex"  style="height:100%;">
           <Col  class="layout-menu-left" style="width:200px;overflow:auto;background:white;">
-              <Menu :active-name="activeName" :open-names="open"  theme="light" width="auto"   ref="left_side"
+              <Menu :active-name="activeName"   theme="light" width="auto"   ref="left_side"
               @on-select="click" v-if="menu.length>0"  style="padding-top:20px;">
-                
-                  <Submenu v-for="(item,index) in menu" :name="item.title" >
+                  <MenuGroup v-for="(item,index) in menu" :title="item.title" >
+                     <MenuItem v-for="(child,childInd) in item.children" :name="item.title+'-'+child.title" v-if="item.children">
+                       <Icon type="document-text"></Icon>
+                       {{child.title}}
+                     </MenuItem>
+                  </MenuGroup>
+                  <!-- <Submenu v-for="(item,index) in menu" :name="item.title" >
                       <template slot="title">
                           <Icon type="ios-navigate"></Icon>
 
                           <span class="layout-text">{{item.title}}</span>
                       </template>
                       <MenuItem :name="item.title+'-'+child.title" v-if="item.children" v-for="(child,childInd) in item.children" >{{child.title}}</MenuItem>
-                  </Submenu>
+                  </Submenu> -->
               </Menu>
           </Col>
           <Col  style="overflow:auto;z-index:1;width:calc(100% - 200px);">
@@ -117,10 +118,6 @@ export default {
       vm.activeName = window.localStorage.activeName
       ? window.localStorage.activeName
       : "";
-      if (window.localStorage.open) {
-        vm.open.push(window.localStorage.open);
-        vm.open.push('资源')
-      }
       let defMenu = [
         {
           group_name: "广告",
@@ -158,16 +155,14 @@ export default {
           menuList[len - 1].children = childrenArr;
         }
       });
-      console.log(menuList);
-      console.log(vm);
       vm.$store.menuList = menuList;
       vm.menu = menuList;
       
 
         vm.$nextTick(() => {
+          console.log(vm.activeName)
           console.log(vm.$refs)
-          vm.$refs.left_side.updateOpened();
-          vm.$refs.left_side.updateActiveName();
+          // vm.$refs.left_side.updateActiveName();
         });
     });
 
@@ -207,7 +202,7 @@ export default {
       console.log(val);
       let pt = val.split("-")[0];
       let child = val.split("-")[1];
-      window.localStorage.activeName = child;
+      window.localStorage.activeName = val;
       window.localStorage.open = pt;
       this.pt = pt;
       this.chd = child;

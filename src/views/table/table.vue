@@ -19,7 +19,7 @@
         <Table :columns="columns1" :data="data1"></Table>
         <div style="margin: 10px;overflow: hidden">
             <div style="float: right;">
-                <Page :total="100" :current="1" @on-change="changePage"></Page>
+                <Page :total="total" :current="1" :page-size="limit" @on-change="changePage"></Page>
             </div>
         </div>
     </div>
@@ -27,7 +27,14 @@
 <script>
 import Bus from "../../eventBus";
 export default {
-  props: ["asyncData"],
+    props:{
+      limit: {
+        type: Number
+      },
+      total:{
+        type:Number
+      }
+  },
   data() {
     return {
       value4: "",
@@ -143,7 +150,6 @@ export default {
     };
   },
   created() {
-    console.log(this.asyncData);
     let vm = this;
 
     Bus.$on("asyncData", target => {
